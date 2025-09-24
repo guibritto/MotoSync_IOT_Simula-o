@@ -66,6 +66,7 @@ Sprint_IOT.ipynb
 Patio_Challenge.txt
 Patio_Challenge.csv
 /docs/
+Documento_IOT.pdf
 ```
 
 ---
