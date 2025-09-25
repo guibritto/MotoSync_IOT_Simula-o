@@ -9,8 +9,7 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 - Trilateração para calcular posições `(x, y)`;  
 - Mapeamento das motos em vagas;  
 - Regras de ocupação (janela de 15s);  
-- Visualização do pátio (matplotlib);  
-- Estimativa financeira (CAPEX, OPEX e payback).  
+- Visualização do pátio (matplotlib). 
 
 ---
 
