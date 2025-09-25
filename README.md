@@ -69,13 +69,12 @@ Patio_Challenge.csv
 ---
 
 ## 📑 6. Esquema do CSV
-- `timestamp` — hora da leitura  
 - `tag_id` — ID da moto/tag  
+- `timestamp` — hora da leitura  
 - `anchor_id` — ID do anchor
 - `tof_ns` — tempo de captação
 - `distance_m` — distância em metros  
-- `pos_x`, `pos_y` — posição estimada  
-- `slot_id` — vaga atribuída (quando ocupada)  
+- `pos_x`, `pos_y` — posição estimada   
 - `pos_confidence_pct` — confiança na posição
 - `status` — se a moto está parada ou andando
 
