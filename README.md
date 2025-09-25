@@ -64,8 +64,6 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 Sprint_IOT.ipynb
 Patio_Challenge.txt
 Patio_Challenge.csv
-/docs/
-Documento_IOT.pdf
 ```
 
 ---
