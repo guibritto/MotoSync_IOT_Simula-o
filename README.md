@@ -43,7 +43,7 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 
 ---
 
-## 🖥️ 4. Tecnologias utilizadas
+## 🖥️ 4. Tecnologias esperadas
 - **Python 3.12**  
 - Bibliotecas:  
   - `numpy`, `pandas`, `matplotlib`, `scipy`  
