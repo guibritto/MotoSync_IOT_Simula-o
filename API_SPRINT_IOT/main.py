@@ -107,7 +107,7 @@ def deletar_moto(id_moto: int):
         # adicionar remoção ao histórico
         cursor.execute("""
             INSERT INTO tabela_historico (id_evento, id_moto, id_vaga, acao, dt_evento)
-            VALUES (HIST_SEQ.NEXTVAL, :id_moto, NULL, 'SAIDA', SYSDATE)
+            VALUES (:id_moto, NULL, 'SAIDA', SYSDATE)
         """, {"id_moto": id_moto})
 
 
