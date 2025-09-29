@@ -137,7 +137,8 @@ def listar_ocupacao():
                 v.altura,
                 v.largura,
                 m.placa,
-                m.tag_id
+                m.tag_id,
+                TO_CHAR(o.dt_ocupacao, 'DD/MM/YYYY HH24:MI:SS') as dt_ocupacao
             FROM TABELA_VAGA v
             INNER JOIN TABELA_OCUPACAO o ON v.id_vaga = o.id_vaga
             INNER JOIN TABELA_MOTO m ON o.id_moto = m.id_moto
@@ -153,6 +154,7 @@ def listar_ocupacao():
                 "largura": r[5],
                 "placa": r[6],
                 "tag_id": r[7],
+                "dt_ocupacao": r[8]
             }
             for r in rows
         ]
@@ -168,4 +170,35 @@ def listar_anchors():
         cursor.execute("SELECT id_anchor, codigo, x_coord, y_coord FROM tabela_anchor")
         rows = cursor.fetchall()
         result = [{"id_anchor": r[0], "codigo": r[1], "x_coord": r[2], "y_coord": r[3]} for r in rows]
+    return result
+
+# Listar histórico
+@app.get("/historico")
+def listar_historico():
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT 
+                h.id_evento,
+                h.id_moto,
+                h.id_vaga,
+                h.acao,
+                TO_CHAR(h.dt_evento, 'DD/MM/YYYY HH24:MI:SS') as dt_evento,
+                m.placa
+            FROM tabela_historico h
+            LEFT JOIN tabela_moto m ON h.id_moto = m.id_moto
+            ORDER BY h.dt_evento DESC
+        """)
+        rows = cursor.fetchall()
+        result = [
+            {
+                "id_evento": r[0],
+                "id_moto": r[1],
+                "id_vaga": r[2],
+                "acao": r[3],
+                "dt_evento": r[4],
+                "placa": r[5]
+            }
+            for r in rows
+        ]
     return result
