@@ -61,9 +61,9 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 ```
 README.md
 /scripts/
-  Sprint_IOT.ipynb
   Patio_Challenge.txt
   Patio_Challenge.csv
+  Sprint_IOT.ipynb
   Scripts_SQL.sql
 /API_SPRINT_IOT/
   /__pycache__/
