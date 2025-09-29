@@ -36,17 +36,26 @@ def ocupar_vaga(dados: dict):
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # coloca a moto na vaga caso moto não esteja ocupando nenhuma
         cursor.execute(
-            "INSERT INTO tabela_ocupacao (id_vaga, id_moto, dt_ocupacao) VALUES (:id_vaga, :id_moto, SYSDATE)",
+            """
+            INSERT INTO tabela_ocupacao (id_vaga, id_moto, dt_ocupacao)
+            SELECT :id_vaga, :id_moto, SYSDATE FROM dual
+            WHERE NOT EXISTS (
+                SELECT 1 FROM tabela_ocupacao WHERE id_moto = :id_moto
+            )
+            """,
             {"id_vaga": dados["id_vaga"], "id_moto": dados["id_moto"]}
         )
 
-        # registra histórico
-        cursor.execute(
-            "INSERT INTO tabela_historico (id_evento, id_moto, id_vaga, acao, dt_evento) VALUES (HIST_SEQ.NEXTVAL, :id_moto, :id_vaga, 'ENTRADA', SYSDATE)",
-            {"id_moto": dados["id_moto"], "id_vaga": dados["id_vaga"]}
-        )
+        if cursor.rowcount > 0:
+            cursor.execute(
+                "INSERT INTO tabela_historico (id_evento, id_moto, id_vaga, acao, dt_evento) VALUES (HIST_SEQ.NEXTVAL, :id_moto, :id_vaga, 'ENTRADA', SYSDATE)",
+                {"id_moto": dados["id_moto"], "id_vaga": dados["id_vaga"]}
+            )
+            conn.commit()
+            return {"msg": "Moto estacionada com sucesso"}
+        else:
+            return {"msg": "Moto já está ocupando uma vaga"}
 
 # Mover moto (alterar vaga)
 @app.put("/motos/{id_moto}/mover")
