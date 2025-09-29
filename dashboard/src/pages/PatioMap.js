@@ -8,7 +8,10 @@ function PatioMap() {
 
   useEffect(() => {
     api.get("/anchors").then((res) => setAnchors(res.data));
-    api.get("/vagas").then((res) => setVagas(res.data));
+    api.get("/vagas").then((res) => {
+      console.log("Vagas:", res.data); // Adicione este log
+      setVagas(res.data);
+    });
     api.get("/ocupacao").then((res) => setOcupacao(res.data));
   }, []);
 
@@ -50,24 +53,24 @@ function PatioMap() {
                 {/* Vagas */}
                 {vagas.map(vaga => (
                 <g key={vaga.id_vaga}>
-                    <rect
-                    x={vaga.x_coord * 40 + padding}
-                    y={vaga.y_coord * 40 + padding}
-                    width={vaga.largura * 40} // escala visual
-                    height={vaga.altura * 40} // escala visual
-                    fill={isVagaOcupada(vaga.id_vaga) ? "red" : "green"}
-                    stroke="#222"
-                    strokeWidth={1}
-                    rx={3}
-                    />
-                    <text
-                    x={vaga.x_coord * 40 + padding + 5}
-                    y={vaga.y_coord * 40 + padding + 15}
-                    fontSize="10"
-                    fill="#fff"
-                    >
-                    {vaga.codigo}
-                    </text>
+                  <rect
+                  x={vaga.x_coord * 40 + padding}
+                  y={vaga.y_coord * 40 + padding - vaga.altura * 40}
+                  width={vaga.largura * 40} // escala visual
+                  height={vaga.altura * 40} // escala visual
+                  fill={isVagaOcupada(vaga.id_vaga) ? "red" : "green"}
+                  stroke="#222"
+                  strokeWidth={1}
+                  rx={3}
+                  />
+                  <text
+                  x={vaga.x_coord * 40 + padding + 5}
+                  y={vaga.y_coord * 40 + padding - vaga.altura * 40 + 15}
+                  fontSize="10"
+                  fill="#000"
+                  >
+                  {vaga.codigo}
+                  </text>
                 </g>
                 ))}
             </svg>

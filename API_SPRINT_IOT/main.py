@@ -181,12 +181,13 @@ def listar_historico():
             SELECT 
                 h.id_evento,
                 h.id_moto,
-                h.id_vaga,
+                v.codigo,
                 h.acao,
                 TO_CHAR(h.dt_evento, 'DD/MM/YYYY HH24:MI:SS') as dt_evento,
                 m.placa
             FROM tabela_historico h
             LEFT JOIN tabela_moto m ON h.id_moto = m.id_moto
+            LEFT JOIN tabela_vaga v ON h.id_vaga = v.id_vaga
             ORDER BY h.dt_evento DESC
         """)
         rows = cursor.fetchall()
@@ -194,7 +195,7 @@ def listar_historico():
             {
                 "id_evento": r[0],
                 "id_moto": r[1],
-                "id_vaga": r[2],
+                "codigo": r[2],
                 "acao": r[3],
                 "dt_evento": r[4],
                 "placa": r[5]
