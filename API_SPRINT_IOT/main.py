@@ -58,7 +58,7 @@ def ocupar_vaga(dados: dict):
 
         if cursor.rowcount > 0:
             cursor.execute(
-                "INSERT INTO tabela_historico (id_evento, id_moto, id_vaga, acao, dt_evento) VALUES (:id_moto, :id_vaga, 'ENTRADA', SYSDATE)",
+                "INSERT INTO tabela_historico (id_moto, id_vaga, acao, dt_evento) VALUES (:id_moto, :id_vaga, 'ENTRADA', SYSDATE)",
                 {"id_moto": dados["id_moto"], "id_vaga": dados["id_vaga"]}
             )
             conn.commit()
