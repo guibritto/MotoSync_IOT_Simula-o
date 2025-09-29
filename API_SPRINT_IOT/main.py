@@ -129,15 +129,35 @@ def listar_ocupacao():
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT v.codigo, v.x_coord, v.y_coord, v.altura, v.largura, m.placa, m.tag_id
-            FROM tabela_vaga v,
-            LEFT JOIN tabela_ocupacao o ON v.id_vaga = o.id_vaga
-            LEFT JOIN tabela_moto m ON o.id_moto = m.id_moto
+            SELECT 
+                v.id_vaga,
+                v.codigo,
+                v.x_coord,
+                v.y_coord,
+                v.altura,
+                v.largura,
+                m.placa,
+                m.tag_id
+            FROM TABELA_VAGA v
+            INNER JOIN TABELA_OCUPACAO o ON v.id_vaga = o.id_vaga
+            INNER JOIN TABELA_MOTO m ON o.id_moto = m.id_moto
         """)
         rows = cursor.fetchall()
-        return [
-            {"codigo": r[0], "x_coord":r[1], "y_coord": r[2], "altura": r[3], "largura": r[4], "placa": r[5], "tag_id": r[6]} for r in rows
+        result = [
+            {
+                "id_vaga": r[0],
+                "codigo": r[1],
+                "x_coord": r[2],
+                "y_coord": r[3],
+                "altura": r[4],
+                "largura": r[5],
+                "placa": r[6],
+                "tag_id": r[7],
+            }
+            for r in rows
         ]
+    return result
+
 
 
 # Listar anchors
