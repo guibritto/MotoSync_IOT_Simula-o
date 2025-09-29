@@ -48,7 +48,7 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 - Bibliotecas:  
   - `numpy`, `pandas`, `matplotlib`, `scipy`  
   - `scikit-learn` ou `lightgbm` (para ML opcional)  
-- **Banco de dados**: PostgreSQL / TimescaleDB (sugerido).  
+- **Banco de dados**: OracleDB.  
 - **Mensageria (simulada)**: MQTT para ingestão.  
 - **Hardware (estimado)**:  
   - Tags DWM1001-DEV (~R$ 160,18)  
@@ -59,11 +59,20 @@ O protótipo simula **leitura, tratamento e visualização de dados IoT**:
 ## 📂 5. Estrutura de arquivos
 
 ```
-/README.md
+README.md
 /scripts/
-Sprint_IOT.ipynb
-Patio_Challenge.txt
-Patio_Challenge.csv
+  Sprint_IOT.ipynb
+  Patio_Challenge.txt
+  Patio_Challenge.csv
+  Scripts_SQL.sql
+/API_SPRINT_IOT/
+  /__pycache__/
+    db.cpython-321.pyc
+    main.cpython-321.pyc
+  db.py
+  main.py
+/DASHBOARD/
+  tela.tsx
 ```
 
 ---
