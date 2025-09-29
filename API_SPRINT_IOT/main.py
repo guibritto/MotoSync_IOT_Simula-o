@@ -118,9 +118,9 @@ def deletar_moto(id_moto: int):
 def listar_vagas():
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT id_vaga, codigo FROM tabela_vaga")
+        cursor.execute("SELECT id_vaga, codigo, x_coord, y_coord FROM tabela_vaga")
         rows = cursor.fetchall()
-        result = [{"id_vaga": r[0], "codigo": r[1]} for r in rows]
+        result = [{"id_vaga": r[0], "codigo": r[1], "x_coord": r[2], "y_coord": r[3]} for r in rows]
     return result
 
 # Listar ocupação
@@ -202,4 +202,5 @@ def listar_historico():
             }
             for r in rows
         ]
+
     return result
