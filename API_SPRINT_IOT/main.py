@@ -129,7 +129,7 @@ def listar_ocupacao():
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT v.codigo, v.x_coord, v.y_coord, v.altura, v.largura m.placa, m.tag_id
+            SELECT v.codigo, v.x_coord, v.y_coord, v.altura, v.largura, m.placa, m.tag_id
             FROM tabela_vaga v,
             LEFT JOIN tabela_ocupacao o ON v.id_vaga = o.id_vaga
             LEFT JOIN tabela_moto m ON o.id_moto = m.id_moto
