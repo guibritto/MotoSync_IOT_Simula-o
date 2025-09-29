@@ -102,7 +102,7 @@ def deletar_moto(id_moto: int):
         cursor = conn.cursor()
 
         # remove ocupação vinculada
-        cursor.execute("DELETE FROM OCUPACAO WHERE id_moto = :id_moto", {"id_moto": id_moto})
+        cursor.execute("DELETE FROM tabela_ocupacao WHERE id_moto = :id_moto", {"id_moto": id_moto})
 
         # adicionar remoção ao histórico
         cursor.execute("""
@@ -129,14 +129,14 @@ def listar_ocupacao():
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT v.codigo_vaga, v.setor, m.placa, m.modelo
-            FROM VAGA v
-            LEFT JOIN OCUPACAO o ON v.id_vaga = o.id_vaga
-            LEFT JOIN MOTO m ON o.id_moto = m.id_moto
+            SELECT v.codigo, v.x_coord, v.y_coord, v.altura, v.largura m.placa, m.tag_id
+            FROM tabela_vaga v,
+            LEFT JOIN tabela_ocupacao o ON v.id_vaga = o.id_vaga
+            LEFT JOIN tabela_moto m ON o.id_moto = m.id_moto
         """)
         rows = cursor.fetchall()
         return [
-            {"vaga": r[0], "setor": r[1], "placa": r[2], "modelo": r[3]} for r in rows
+            {"codigo": r[0], "x_coord":r[1], "y_coord": r[2], "altura": r[3], "largura": r[4], "placa": r[5], "tag_id": r[6]} for r in rows
         ]
 
 
