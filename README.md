@@ -74,6 +74,7 @@ Além disso, desenvolvemos uma **API REST** em FastAPI que permite:
 
 ```
 README.md
+.gitignore
 /scripts/
   Patio_Challenge.txt
   Patio_Challenge.csv
@@ -85,7 +86,7 @@ README.md
     main.cpython-321.pyc
   db.py
   main.py
-/DASHBOARD/
+/dashboard/
   /src/
     App.js
     /pages/
@@ -334,3 +335,4 @@ Embora o payback seja relativamente longo (~7 anos), há espaço para otimizaç�
 
 - Visualizar ocupação em tempo real.
 - Exportar métricas quantitativas.
+
