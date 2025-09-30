@@ -27,7 +27,7 @@ function PatioMap() {
     ocupacao.some((o) => o.id_vaga === vagaId);
 
   // Retorna o número de ocupações para uma vaga
-  const ocupacoesNaVaga = (vagaId) =>
+  const ocupacoesNaVaga = (vagaId) => 
     ocupacao.filter((o) => o.id_vaga === vagaId).length;
 
   // Limites do gráfico (ajusta conforme necessário)
@@ -126,11 +126,13 @@ function PatioMap() {
         <div>
             <h2>📍 Ocupações</h2>
             <ul>
-                {ocupacao.map((ocupacao) => (
-                <li key={ocupacao.id_ocupacao}>
-                    {ocupacao.codigo} - {ocupacao.tag_id} - {ocupacao.placa || "Livre"}
-                </li>
-                ))}
+                {[...ocupacao]
+                    .sort((a, b) => String(a.tag_id).localeCompare(String(b.tag_id)))
+                    .map((ocupacao) => (
+                        <li key={ocupacao.id_ocupacao}>
+                            {ocupacao.tag_id} - {ocupacao.codigo} - {ocupacao.placa || "Livre"}
+                        </li>
+                    ))}
             </ul>
         </div>
       </div>

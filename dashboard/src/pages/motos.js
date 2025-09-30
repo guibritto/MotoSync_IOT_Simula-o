@@ -5,7 +5,13 @@ function Motos() {
   const [motos, setMotos] = useState([]);
 
   useEffect(() => {
-    api.get("/motos").then((res) => setMotos(res.data));
+    api.get("/motos").then((res) => {
+      // ordena pela tag_id
+      const ordenadas = [...res.data].sort((a, b) =>
+        a.tag_id.localeCompare(b.tag_id)
+      );
+      setMotos(ordenadas);
+    });
   }, []);
 
   return (

@@ -5,6 +5,8 @@ DROP TABLE tabela_ocupacao;
 DROP TABLE tabela_moto;
 DROP TABLE tabela_vaga;
 
+DROP SEQUENCE MOTO_SEQ;
+
 --CREATES
 --TABElA VAGA
 CREATE TABLE tabela_vaga (
@@ -132,6 +134,12 @@ INSERT INTO tabela_anchor (id_anchor, codigo, x_coord, y_coord) VALUES (5, 'A5',
 INSERT INTO tabela_anchor (id_anchor, codigo, x_coord, y_coord) VALUES (6, 'A6', 15.0, 7.5);
 INSERT INTO tabela_anchor (id_anchor, codigo, x_coord, y_coord) VALUES (7, 'A7', 7.5, 0.0);
 INSERT INTO tabela_anchor (id_anchor, codigo, x_coord, y_coord) VALUES (8, 'A8', 7.5, 15.0);
+
+CREATE SEQUENCE MOTO_SEQ
+    START WITH 16   -- começa no próximo depois do que já existe
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
 
 --SELECTS
 SELECT * FROM tabela_vaga;

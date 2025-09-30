@@ -33,7 +33,14 @@ def cadastrar_moto(dados: dict):
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO tabela_moto (id_moto, tag_id, placa) VALUES (MOTO_SEQ.NEXTVAL, :placa)",
+            """
+            INSERT INTO tabela_moto (id_moto, tag_id, placa)
+            VALUES (
+                MOTO_SEQ.NEXTVAL,
+                'TAG_' || LPAD(MOTO_SEQ.CURRVAL, 3, '0'),
+                :placa
+            )
+            """,
             {"placa": dados["placa"]}
         )
         conn.commit()
