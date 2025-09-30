@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Motos from "./pages/motos";
 import Vagas from "./pages/vagas";
-import Historicos from "./pages/historico";
 import { useEffect, useState } from "react";
 import api from "./services/api";
 import PatioMap from "./pages/PatioMap";
@@ -32,7 +31,6 @@ function Home() {
 
   return (
     <div>
-      <h2>Mapa do Pátio 🚦</h2>
       <PatioMap vagasStatus={vagas} />
     </div>
   );
@@ -46,20 +44,18 @@ function App() {
 
         <nav style={{ marginBottom: "20px" }}>
           <Link to="/" style={{ marginRight: "15px" }}>
-            Home
+            Dashboard
           </Link>
           <Link to="/motos" style={{ marginRight: "15px" }}>
             Motos
           </Link>
           <Link to="/vagas">Vagas</Link>
-          <Link to="/historico" style={{ marginLeft: "15px" }}>Histórico</Link>
         </nav>
 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/motos" element={<Motos />} />
           <Route path="/vagas" element={<Vagas />} />
-          <Route path="/historico" element={<Historicos />} />
         </Routes>
       </div>
     </Router>
