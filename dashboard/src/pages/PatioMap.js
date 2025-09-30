@@ -38,6 +38,20 @@ function PatioMap() {
   // Quantidade de ocorrências (vagas com mais de uma ocupação)
   const ocorrencias = vagas.filter(vaga => ocupacoesNaVaga(vaga.id_vaga) > 1).length;
 
+  // Cálculo da ocupação por setor
+  const setores = {};
+  vagas.forEach(vaga => {
+    const setor = vaga.codigo ? vaga.codigo[0] : "Indef";
+    if (!setores[setor]) setores[setor] = { total: 0, ocupadas: 0 };
+    setores[setor].total += 1;
+    if (ocupacoesNaVaga(vaga.id_vaga) > 0) setores[setor].ocupadas += 1;
+  });
+
+  const setoresArray = Object.entries(setores).map(([setor, dados]) => ({
+    setor,
+    taxa: dados.total > 0 ? ((dados.ocupadas / dados.total) * 100).toFixed(0) : "0"
+  }));
+
   // Limites do gráfico (ajusta conforme necessário)
   const padding = 20;
 
@@ -67,6 +81,24 @@ function PatioMap() {
             ({vagasOcupadas} de {totalVagas} vagas ocupadas)
           </div>
         </div>
+        {/* Card Ocupação por Setor */}
+        <div style={{
+          background: "#ffffffff",
+          padding: "16px 24px",
+          borderRadius: 8,
+          boxShadow: "0 3px 10px rgba(0, 0, 0, 0.07)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          width: 300,
+        }}>
+          <h2 style={{margin: 0, fontSize: 22}}>Ocupação por Setor</h2>
+          <ul style={{margin: 0, paddingLeft: 18, fontSize: 18, color: "#0074D9", fontWeight: "bold"}}>
+            {setoresArray.map(({ setor, taxa }) => (
+              <li key={setor}>{setor} = {taxa}%</li>
+            ))}
+          </ul>
+        </div>
         {/* Card Ocorrências */}
         <div style={{
           background: "#ffffffff",
@@ -89,7 +121,6 @@ function PatioMap() {
       </div>
       <h2>Mapa do Pátio 🚦</h2>
       <div style={{ display: "flex" }}>
-        {/* Mapa SVG */}
         <div style={{ borderRadius: 8, background: "#ffffffff", boxShadow: "0 3px 10px rgba(0, 0, 0, 0.07)" }}>
           <div style={{marginTop: 10, marginLeft: 100}}>
                 <span>🟩 Livre | </span>

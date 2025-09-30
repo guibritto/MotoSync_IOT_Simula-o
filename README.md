@@ -1,58 +1,72 @@
 # Mottu SmartPark (Protótipo IoT / RTLS UWB)
 
 ## 📌 1. Resumo do projeto
-**Mottu SmartPark** é um protótipo simulado de sistema de localização de motos em pátios usando **UWB (Ultra-Wideband)**.  
-O objetivo é **monitorar em tempo real a posição das motos**, identificar se estão corretamente alocadas em suas vagas (`A01`, `A02`...), gerar métricas de confiabilidade e apoiar a operação da Mottu em escala nacional.  
 
-O protótipo simula **leitura, tratamento e visualização de dados IoT**:  
-- Geração de dataset sintético (CSV com leituras ToF/distâncias);  
-- Trilateração para calcular posições `(x, y)`;  
-- Mapeamento das motos em vagas;  
-- Regras de ocupação (janela de 15s);  
-- Visualização do pátio (matplotlib). 
+**Mottu SmartPark** é um protótipo simulado de sistema de localização de motos em pátios usando **UWB (Ultra-Wideband)**.  
+O objetivo é **monitorar em tempo real a posição das motos**, identificar se estão corretamente alocadas em suas vagas (`A01`, `A02`...), gerar métricas de confiabilidade e apoiar a operação da Mottu em escala nacional.
+
+O protótipo simula **leitura, tratamento e visualização de dados IoT**:
+
+- Geração de dataset sintético (CSV com leituras ToF/distâncias);
+- Trilateração para calcular posições `(x, y)`;
+- Mapeamento das motos em vagas;
+- Regras de ocupação (janela de 15s);
+- Visualização do pátio (matplotlib).
+
+Além disso, desenvolvemos uma **API REST** em FastAPI que permite:
+
+- Consultar motos, vagas, ocupações e histórico de eventos;
+- Cadastrar novas motos;
+- Estacionar, mover e remover motos do sistema;
+- Integrar o backend ao dashboard web para visualização e controle em tempo real.
 
 ---
 
 ## 🏗️ 2. Arquitetura da solução
 
 ### Sensoriamento (UWB)
-- **Tags**: DWM1001-DEV (instaladas nas motos).  
-- **Anchors**: Skylab VDU2501 fixados em postes/teto (6 por pátio).  
-- **Intervalo de transmissão**: 500 ms (trade-off entre bateria e responsividade).  
+
+- **Tags**: DWM1001-DEV (instaladas nas motos).
+- **Anchors**: Skylab VDU2501 fixados em postes/teto (6 por pátio).
+- **Intervalo de transmissão**: 500 ms (trade-off entre bateria e responsividade).
 
 ### Edge (pátio local)
-- Servidor local processa trilateração (mínimo 3 anchors).  
-- Banco local (PostgreSQL ou TimescaleDB) armazena dados.  
-- Regras de negócio aplicadas localmente (15s parado = ocupado).  
+
+- Servidor local processa trilateração (mínimo 3 anchors).
+- Banco local (PostgreSQL ou TimescaleDB) armazena dados.
+- Regras de negócio aplicadas localmente (15s parado = ocupado).
 
 ### Cloud / Dashboard
-- Backup e agregação em tempo real.  
-- Dashboard com indicadores por pátio.  
-- Possibilidade de Machine Learning para detectar conflitos ou erros.  
+
+- Backup e agregação em tempo real.
+- Dashboard com indicadores por pátio.
+- Possibilidade de Machine Learning para detectar conflitos ou erros.
 
 ---
 
 ## ⚙️ 3. Funcionalidades já implementadas
-- **CSV sintético**: leitura de múltiplos anchors/tags simulados.  
-- **Trilateração** (least squares) → posição `(x, y)`.  
-- **Confiança posicional** via RMS residual.  
-- **Mapa do pátio (matplotlib)**: vagas (`A01...`), anchors, motos.  
-- **Associação tag → vaga** com base em posição.  
-- **Regra de ocupação**: 15s parado em uma vaga.  
-- **Saída CSV** com vagas ocupadas.  
+
+- **CSV sintético**: leitura de múltiplos anchors/tags simulados.
+- **Trilateração** (least squares) → posição `(x, y)`.
+- **Confiança posicional** via RMS residual.
+- **Mapa do pátio (matplotlib)**: vagas (`A01...`), anchors, motos.
+- **Associação tag → vaga** com base em posição.
+- **Regra de ocupação**: 15s parado em uma vaga.
+- **Saída CSV** com vagas ocupadas.
 
 ---
 
 ## 🖥️ 4. Tecnologias esperadas
-- **Python 3.12**  
-- Bibliotecas:  
-  - `numpy`, `pandas`, `matplotlib`, `scipy`  
-  - `scikit-learn` ou `lightgbm` (para ML opcional)  
-- **Banco de dados**: OracleDB.  
-- **Mensageria (simulada)**: MQTT para ingestão.  
-- **Hardware (estimado)**:  
-  - Tags DWM1001-DEV (~R$ 160,18)  
-  - Anchors Skylab VDU2501 (~R$ 1.666,35)  
+
+- **Python 3.12**
+- Bibliotecas:
+  - `numpy`, `pandas`, `matplotlib`, `scipy`
+  - `scikit-learn` ou `lightgbm` (para ML opcional)
+- **Banco de dados**: OracleDB.
+- **Mensageria (simulada)**: MQTT para ingestão.
+- **Hardware (estimado)**:
+  - Tags DWM1001-DEV (~R$ 160,18)
+  - Anchors Skylab VDU2501 (~R$ 1.666,35)
 
 ---
 
@@ -72,24 +86,157 @@ README.md
   db.py
   main.py
 /DASHBOARD/
-  tela.tsx
+  /src/
+    App.js
+    /pages/
+      motos.js
+      vagas.js
+      PatioMap.js
+    /services/
+      api.js
 ```
 
 ---
 
-## 📑 6. Esquema do CSV
-- `tag_id` — ID da moto/tag  
-- `timestamp` — hora da leitura  
+## 6. Rotas da API e parâmetros
+
+A API foi desenvolvida em FastAPI e expõe as seguintes rotas para integração com o dashboard e automações:
+
+### **GET /**
+
+- Teste de funcionamento da API
+- **Retorno:** `{ "status": "API funcionando 🚀" }`
+
+### **GET /motos**
+
+- Lista todas as motos cadastradas
+- **Retorno:**
+  ```json
+  [
+    { "id_moto": 1, "tag_id": "TAG_001", "placa": "ABC1234" },
+    ...
+  ]
+  ```
+
+### **POST /motos**
+
+- Cadastra uma nova moto
+- **Body:**
+  ```json
+  { "placa": "ABC1234" }
+  ```
+- **Retorno:**  
+  `{ "msg": "Moto cadastrada com sucesso" }`
+
+### **PUT /motos/{id_moto}/mover**
+
+- Move uma moto para outra vaga
+- **Parâmetros:**
+  - `id_moto` (path): ID da moto
+- **Body:**
+  ```json
+  { "id_vaga": 5 }
+  ```
+- **Retorno:**  
+  `{ "msg": "Moto {id_moto} movida para a vaga {id_vaga}" }`
+
+### **DELETE /motos/{id_moto}**
+
+- Remove uma moto do sistema e libera a vaga
+- **Parâmetros:**
+  - `id_moto` (path): ID da moto
+- **Retorno:**  
+  `{ "msg": "Moto {id_moto} removida com sucesso da vaga {id_vaga}" }`
+
+### **GET /vagas**
+
+- Lista todas as vagas do pátio
+- **Retorno:**
+  ```json
+  [
+    { "id_vaga": 1, "codigo": "A01", "x_coord": 2, "y_coord": 3 },
+    ...
+  ]
+  ```
+
+### **GET /ocupacao**
+
+- Lista as vagas ocupadas e detalhes das motos
+- **Retorno:**
+  ```json
+  [
+    {
+      "id_vaga": 1,
+      "codigo": "A01",
+      "x_coord": 2,
+      "y_coord": 3,
+      "altura": 2.0,
+      "largura": 1.0,
+      "placa": "ABC1234",
+      "tag_id": "TAG_001",
+      "dt_ocupacao": "30/09/2025 14:23:00"
+    },
+    ...
+  ]
+  ```
+
+### **POST /ocupacao**
+
+- Estaciona uma moto em uma vaga
+- **Body:**
+  ```json
+  { "id_vaga": 1, "id_moto": 2 }
+  ```
+- **Retorno:**  
+  `{ "msg": "Moto estacionada com sucesso" }`  
+  ou  
+  `{ "msg": "Moto já está ocupando uma vaga" }`
+
+### **GET /anchors**
+
+- Lista todos os anchors do pátio
+- **Retorno:**
+  ```json
+  [
+    { "id_anchor": 1, "codigo": "A1", "x_coord": 0, "y_coord": 0 },
+    ...
+  ]
+  ```
+
+### **GET /historico**
+
+- Lista o histórico de eventos (entrada, saída, mudança de vaga)
+- **Retorno:**
+  ```json
+  [
+    {
+      "id_evento": 1,
+      "id_moto": 2,
+      "codigo": "A01",
+      "acao": "ENTRADA",
+      "dt_evento": "30/09/2025 14:23:00",
+      "placa": "ABC1234"
+    },
+    ...
+  ]
+  ```
+
+---
+
+## 📑 7. Esquema do CSV
+
+- `tag_id` — ID da moto/tag
+- `timestamp` — hora da leitura
 - `anchor_id` — ID do anchor
 - `tof_ns` — tempo de captação
-- `distance_m` — distância em metros  
-- `pos_x`, `pos_y` — posição estimada   
+- `distance_m` — distância em metros
+- `pos_x`, `pos_y` — posição estimada
 - `pos_confidence_pct` — confiança na posição
 - `status` — se a moto está parada ou andando
 
 ---
 
-## 🚀 7. Instruções de uso
+## 🚀 8. Instruções de uso
 
 1. Abrir o arquivo "Sprint_IOT.ipynb" em alguma IDE
 2. Rodar o código até a seguinte parte:
@@ -98,7 +245,7 @@ README.md
 
 ---
 
-## 📏 8. Regras de negócio
+## 📏 9. Regras de negócio
 
 - Confirmação de ocupação: 15s parado.
 - Mínimo de anchors: 3 por tag.
@@ -107,7 +254,7 @@ README.md
 
 ---
 
-## 📊 9. Métricas monitoradas
+## 📊 10. Métricas monitoradas
 
 - Accuracy / Precision / Recall da detecção de ocupação.
 - Latência de confirmação (média e p95).
@@ -117,14 +264,15 @@ README.md
 
 ---
 
-## 💰 10. Análise financeira
+## 💰 11. Análise financeira
+
 ### Premissas
 
 - 142 pátios, 100.000 motos.
 - 6 anchors/pátio.
 - Tags DWM1001-DEV (R$ 160,18).
 - Anchors Skylab VDU2501 (R$ 1.666,35).
-  
+
 ### Totais
 
 - Tags (100.000): R$ 16.018.000
@@ -150,7 +298,7 @@ README.md
 
 ---
 
-## ⚠️ 11. Riscos e mitigação
+## ⚠️ 12. Riscos e mitigação
 
 - Sensibilidade a obstáculos metálicos → instalar anchors em posições elevadas.
 - Custo/logística das tags → prever plano de manutenção.
@@ -159,7 +307,7 @@ README.md
 
 ---
 
-## 🔮 12. Extensões futuras
+## 🔮 13. Extensões futuras
 
 - Visão computacional (YOLO/MediaPipe) para validação.
 - Dashboard interativo (web ou PowerBI).
@@ -168,7 +316,7 @@ README.md
 
 ---
 
-## 📌 13. Resultados parciais do protótipo
+## 📌 14. Resultados parciais do protótipo
 
 - Dataset gerado: 20 motos ocupando vagas, 6 anchors.
 - Visualização funcional: pátio com vagas (A01...), motos (pontos), vagas livres/vermelhas.
@@ -177,7 +325,7 @@ README.md
 
 ---
 
-## ✅ 14. Conclusão
+## ✅ 15. Conclusão
 
 O protótipo mostra a viabilidade técnica e a lógica de negócio para monitoramento IoT em pátios.
 Embora o payback seja relativamente longo (~7 anos), há espaço para otimização com compra em volume, ajustes operacionais e inclusão de outras tecnologias de suporte (como visão computacional).
