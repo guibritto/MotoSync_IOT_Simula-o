@@ -108,17 +108,34 @@ def deletar_moto(id_moto: int):
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # remove ocupação vinculada
-        cursor.execute("DELETE FROM tabela_ocupacao WHERE id_moto = :id_moto", {"id_moto": id_moto})
-
-        # adicionar remoção ao histórico
+        # 1. Buscar a vaga onde a moto está
         cursor.execute("""
-            INSERT INTO tabela_historico (id_moto, id_vaga, acao, dt_evento)
-            VALUES (:id_moto, NULL, 'SAIDA', SYSDATE)
+            SELECT id_vaga 
+            FROM tabela_ocupacao 
+            WHERE id_moto = :id_moto
+        """, {"id_moto": id_moto})
+        row = cursor.fetchone()
+        id_vaga = row[0] if row else None
+
+        if not id_vaga:
+            return {"erro": f"Moto {id_moto} não encontrada em nenhuma vaga"}
+
+        # 2. Remover ocupação vinculada
+        cursor.execute("""
+            DELETE FROM tabela_ocupacao 
+            WHERE id_moto = :id_moto
         """, {"id_moto": id_moto})
 
+        # 3. Registrar saída no histórico com vaga correta
+        cursor.execute("""
+            INSERT INTO tabela_historico (id_moto, id_vaga, acao, dt_evento)
+            VALUES (:id_moto, :id_vaga, 'SAIDA', SYSDATE)
+        """, {"id_moto": id_moto, "id_vaga": id_vaga})
 
-    return {"msg": f"Moto {id_moto} removida com sucesso"}
+        conn.commit()
+
+    return {"msg": f"Moto {id_moto} removida com sucesso da vaga {id_vaga}"}
+
 
 # Listar vagas
 @app.get("/vagas")
