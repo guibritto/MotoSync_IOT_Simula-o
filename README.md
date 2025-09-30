@@ -1,5 +1,17 @@
 # Mottu SmartPark (Protótipo IoT / RTLS UWB)
 
+## Integrantes
+- Guilherme Gonçalves Britto - RM558475
+- Thiago Mendes do Nascimento - RM555352
+- Vinicius Banciela Breda Lopes - RM558117
+
+---
+
+## Link do vídeo
+`https://youtu.be/u5RAoe6PshI`
+
+---
+
 ## 📌 1. Resumo do projeto
 
 **Mottu SmartPark** é um protótipo simulado de sistema de localização de motos em pátios usando **UWB (Ultra-Wideband)**.  
@@ -366,4 +378,5 @@ Embora o payback seja relativamente longo (~7 anos), há espaço para otimizaç�
 
 - Visualizar ocupação em tempo real.
 - Exportar métricas quantitativas.
+
 
