@@ -24,7 +24,7 @@ def listar_motos():
         cursor = conn.cursor()
         cursor.execute("SELECT id_moto, tag_id, placa FROM tabela_moto")
         rows = cursor.fetchall()
-        result = [{"id_moto": r[0], "tag_id": r[1]} for r in rows]
+        result = [{"id_moto": r[0], "tag_id": r[1], "placa":r[2]} for r in rows]
     return result
 
 # Cadastrar moto
