@@ -14,7 +14,7 @@ function Historicos() {
       <ul>
         {historicos.map((historico) => (
           <li key={historico.id_evento}>
-            {historico.id_evento} - {historico.id_vaga} - {historico.placa} - {historico.id_acao} - {historico.dt_evento}
+            {historico.id_evento} - {historico.codigo} - {historico.placa} - {historico.acao} - {historico.dt_evento}
           </li>
         ))}
       </ul>

@@ -202,5 +202,4 @@ def listar_historico():
             }
             for r in rows
         ]
-
     return result

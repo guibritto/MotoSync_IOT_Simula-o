@@ -7,17 +7,28 @@ function PatioMap() {
   const [ocupacao, setOcupacao] = useState([]);
 
   useEffect(() => {
-    api.get("/anchors").then((res) => setAnchors(res.data));
-    api.get("/vagas").then((res) => {
-      console.log("Vagas:", res.data); // Adicione este log
-      setVagas(res.data);
-    });
-    api.get("/ocupacao").then((res) => setOcupacao(res.data));
+    api.get("/anchors")
+      .then((res) => {
+        setAnchors(res.data);
+      })
+
+    api.get("/vagas")
+      .then((res) => {
+        setVagas(res.data);
+      })
+
+
+    api.get("/ocupacao")
+      .then((res) => setOcupacao(res.data))
   }, []);
 
   // Descobre se a vaga está ocupada
   const isVagaOcupada = (vagaId) =>
-    ocupacao.some((o) => o.vaga === vagaId && o.placa);
+    ocupacao.some((o) => o.id_vaga === vagaId);
+
+  // Retorna o número de ocupações para uma vaga
+  const ocupacoesNaVaga = (vagaId) =>
+    ocupacao.filter((o) => o.id_vaga === vagaId).length;
 
   // Limites do gráfico (ajusta conforme necessário)
   const padding = 20;
@@ -49,30 +60,60 @@ function PatioMap() {
                     </text>
                 </g>
                 ))}
+                {vagas.map((vaga, idx) => {
+                  // Log para debug
+                  console.log("Vaga:", vaga);
 
-                {/* Vagas */}
-                {vagas.map(vaga => (
-                <g key={vaga.id_vaga}>
-                  <rect
-                  x={vaga.x_coord * 40 + padding}
-                  y={vaga.y_coord * 40 + padding - vaga.altura * 40}
-                  width={vaga.largura * 40} // escala visual
-                  height={vaga.altura * 40} // escala visual
-                  fill={isVagaOcupada(vaga.id_vaga) ? "red" : "green"}
-                  stroke="#222"
-                  strokeWidth={1}
-                  rx={3}
-                  />
-                  <text
-                  x={vaga.x_coord * 40 + padding + 5}
-                  y={vaga.y_coord * 40 + padding - vaga.altura * 40 + 15}
-                  fontSize="10"
-                  fill="#000"
-                  >
-                  {vaga.codigo}
-                  </text>
-                </g>
-                ))}
+                  // Parse para garantir que são números
+                  const x = Number(vaga.x_coord);
+                  const y = Number(vaga.y_coord);
+                  const largura = 1.1; // largura fixa
+                  const altura = 2.0;  // altura fixa
+
+                  // Se algum campo não for número ou não existir, não renderiza
+                  if (
+                    !vaga.id_vaga ||
+                    isNaN(x) ||
+                    isNaN(y)
+                  ) return null;
+
+                  // Lógica de cor:
+                  let fill = "lightgreen";
+                  let stroke = "green";
+                  const ocupacoes = ocupacoesNaVaga(vaga.id_vaga);
+
+                  if (ocupacoes > 1) {
+                    fill = "#FFFF70"; // amarelo
+                    stroke = "#ff8700";
+                  } else if (ocupacoes === 1) {
+                    fill = "#FFCCCB"; // vermelho claro
+                    stroke = "red";
+                  }
+
+                  return (
+                    <g key={vaga.id_vaga || idx}>
+                      <rect
+                        x={x * 40 + 10}
+                        y={y * 40 + 10}
+                        width={largura * 40}
+                        height={altura * 40}
+                        fill={fill}
+                        stroke={stroke}
+                        strokeWidth={2}
+                        rx={3}
+                      />
+                      <text
+                        x={x * 40 + 18}
+                        y={y * 40 + 25}
+                        fontSize="15"
+                        fill={stroke}
+                        fontWeight="700"
+                      >
+                        {vaga.codigo}
+                      </text>
+                    </g>
+                  );
+                })}
             </svg>
             <div style={{marginTop: 10}}>
                 <span>🟩 Livre | </span>
