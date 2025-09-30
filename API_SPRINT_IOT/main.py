@@ -88,7 +88,7 @@ def mover_moto(id_moto: int, dados: dict):
         # registra histórico
         cursor.execute("""
             INSERT INTO tabela_historico (id_moto, id_vaga, acao, dt_evento)
-            VALUES (:id_moto, :id_vaga, 'MUNDANCA',  SYSDATE)
+            VALUES (:id_moto, :id_vaga, 'MUDANCA',  SYSDATE)
         """, {"id_moto": id_moto, "id_vaga": id_vaga_nova})
 
         conn.commit()
