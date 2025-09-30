@@ -238,10 +238,41 @@ A API foi desenvolvida em FastAPI e expõe as seguintes rotas para integração 
 
 ## 🚀 8. Instruções de uso
 
-1. Abrir o arquivo "Sprint_IOT.ipynb" em alguma IDE
-2. Rodar o código até a seguinte parte:
-3. Escrever a posição da sua própria moto
-4. Rodar a visualização do gráfico
+### 1. Executar a API
+
+- Certifique-se de que o banco de dados está configurado e acessível.
+- Execute o arquivo principal da API:
+- A API estará disponível em `https://motosync-iot.onrender.com`.
+
+### 2. Testar as rotas da API
+
+- Utilize o **Postman** ou qualquer cliente HTTP para realizar requisições.
+- Exemplos:
+  - `GET https://motosync-iot.onrender.com/motos` — lista motos cadastradas.
+  - `POST https://motosync-iot.onrender.com/motos` — cadastra uma moto (body: `{ "placa": "ABC1234" }`).
+  - `PUT https://motosync-iot.onrender.com/motos/{id_moto}/mover` — move moto para outra vaga.
+  - `DELETE https://motosync-iot.onrender.com/motos/{id_moto}` — retira essa moto da vaga que está.
+  - `GET https://motosync-iot.onrender.com/vagas` — lista vagas.
+  - `GET https://motosync-iot.onrender.com/ocupacao` — lista ocupações.
+  - `POST https://motosync-iot.onrender.com/ocupacao` — adiciona uma ocupação passando vaga e moto.
+  - `GET https://motosync-iot.onrender.com/historico` — lista histórico de eventos.
+  - `GET https://motosync-iot.onrender.com/anchors` — lista os anchors do pátio.
+
+### 3. Visualizar no dashboard web
+
+- Acesse a pasta do dashboard:
+  ```bash
+  cd dashboard
+  ```
+- Instale as dependências:
+  ```bash
+  npm install
+  ```
+- Inicie a aplicação web:
+  ```bash
+  npm start
+  ```
+- Abra o navegador e acesse `http://localhost:3000` para visualizar o mapa do pátio, ocupações, histórico e métricas em tempo real.
 
 ---
 
