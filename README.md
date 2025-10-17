@@ -113,6 +113,7 @@ README.md
 
 ## 6. Rotas da API e parâmetros
 
+
 A API foi desenvolvida em FastAPI e expõe as seguintes rotas para integração com o dashboard e automações:
 
 ### **GET /**
@@ -378,5 +379,6 @@ Embora o payback seja relativamente longo (~7 anos), há espaço para otimizaç�
 
 - Visualizar ocupação em tempo real.
 - Exportar métricas quantitativas.
+
 
 
