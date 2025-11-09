@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , Request
+import json
 from fastapi.middleware.cors import CORSMiddleware
 from db import get_connection
 
@@ -26,6 +27,28 @@ def listar_motos():
         rows = cursor.fetchall()
         result = [{"id_moto": r[0], "tag_id": r[1], "placa":r[2]} for r in rows]
     return result
+
+
+@app.post("/leitura")
+async def receber_leitura(req: Request):
+    data = await req.json()
+    tag_id = data.get("tag_id")
+    # validar formato mínimo
+    if not tag_id or "anchors" not in data:
+        return {"error":"payload inválido"}, 400
+
+    payload_str = json.dumps(data)
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        # Oracle: usar CLOB ou bind; Postgres: jsonb
+        cursor.execute(
+            "INSERT INTO tabela_leitura_uwb (tag_id, payload_json, processed, dt_recebimento) VALUES (:tag_id, :payload, 'N', SYSDATE)",
+            {"tag_id": tag_id, "payload": payload_str}
+        )
+        conn.commit()
+
+    return {"msg":"ok"}
+
 
 # Cadastrar moto
 @app.post("/motos")
@@ -183,6 +206,21 @@ def listar_ocupacao():
             for r in rows
         ]
     return result
+
+@app.post("/ocupacao/saida")
+def liberar_vaga(dados: dict):
+    id_moto = dados["id_moto"]
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id_vaga FROM tabela_ocupacao WHERE id_moto = :id_moto", {"id_moto": id_moto})
+        row = cursor.fetchone()
+        if not row:
+            return {"msg":"Moto não está em nenhuma vaga"}
+        id_vaga = row[0]
+        cursor.execute("DELETE FROM tabela_ocupacao WHERE id_moto = :id_moto", {"id_moto": id_moto})
+        cursor.execute("INSERT INTO tabela_historico (id_moto, id_vaga, acao, dt_evento) VALUES (:id_moto, :id_vaga, 'SAIDA', SYSDATE)", {"id_moto": id_moto, "id_vaga": id_vaga})
+        conn.commit()
+    return {"msg":"Saída registrada com sucesso", "id_vaga": id_vaga}
 
 
 

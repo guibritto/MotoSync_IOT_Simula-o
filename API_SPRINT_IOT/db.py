@@ -1,8 +1,8 @@
 import oracledb
 
 # Configurações do banco
-username = "rm558475"
-password = "fiap25"
+username = "rm558117"
+password = "271298"
 dsn = "oracle.fiap.com.br:1521/ORCL"  # exemplo: XE ou PDB no Oracle
 
 # Criar pool de conexões (recomendado para API)
